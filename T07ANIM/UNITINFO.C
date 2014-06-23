@@ -1,7 +1,7 @@
 /* FILENAME: UNITINFO.C
  * PROGRAMMER: AP6
  * PURPOSE: Animation unit samples handle module.
- * LAST UPDATE: 13.06.2014
+ * LAST UPDATE: 23.06.2014
  */
 
 #include <stdio.h>

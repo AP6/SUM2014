@@ -1,7 +1,7 @@
 /* FILENAME: ANIM.C
  * PROGRAMMER: AP6
  * PURPOSE: Base animation module
- * LAST UPDATE: 07.06.2014
+ * LAST UPDATE: 23.06.2014
  */
 
 #include <stdlib.h>

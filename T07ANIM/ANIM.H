@@ -1,7 +1,7 @@
 /* FILENAME: ANIM.H
  * PROGRAMMER: AP6
  * PURPOSE: Globe project declaration module.
- * LAST UPDATE: 07.06.2014
+ * LAST UPDATE: 23.06.2014
  */
 
 #ifndef __ANIM_H_

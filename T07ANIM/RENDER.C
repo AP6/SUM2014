@@ -1,7 +1,7 @@
 /* FILENAME: RENDER.C
  * PROGRAMMER: AP6
  * PURPOSE: 3D render handle module.
- * LAST UPDATE: 10.06.2014
+ * LAST UPDATE: 23.06.2014
  */
 
 #include <stdio.h>

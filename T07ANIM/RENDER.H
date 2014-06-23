@@ -1,7 +1,7 @@
 /* FILENAME: RENDER.H
  * PROGRAMMER: AP6
  * PURPOSE: 3D render declaration module.
- * LAST UPDATE: 10.06.2014
+ * LAST UPDATE: 23.06.2014
  */
 
 #ifndef __RENDER_H_
