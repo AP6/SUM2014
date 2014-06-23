@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "T05FLOBE", "T05FLOBE.vcproj", "{50CA4C19-E716-4A74-B837-47AE86697588}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{50CA4C19-E716-4A74-B837-47AE86697588}.Debug|Win32.ActiveCfg = Debug|Win32
+		{50CA4C19-E716-4A74-B837-47AE86697588}.Debug|Win32.Build.0 = Debug|Win32
+		{50CA4C19-E716-4A74-B837-47AE86697588}.Release|Win32.ActiveCfg = Release|Win32
+		{50CA4C19-E716-4A74-B837-47AE86697588}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
