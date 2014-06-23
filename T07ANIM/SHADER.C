@@ -1,7 +1,7 @@
 /* FILENAME: SHADER.C
- * PROGRAMMER: VG4
+ * PROGRAMMER: AP6
  * PURPOSE: Shader handle functions.
- * LAST UPDATE: 13.06.2014
+ * LAST UPDATE: 23.06.2014
  */
 
 #include <stdio.h>
@@ -52,7 +52,7 @@ static CHAR *LoadFile( CHAR *FileName )
  *   (UINT) - идентификатор загруженной и скомпилированной
  *            программы или 0 при ошибке.
  */
-UINT VG4_ShadProgInit( CHAR *VSFileName, CHAR *FSFileName )
+UINT AP6_ShadProgInit( CHAR *VSFileName, CHAR *FSFileName )
 {
   CHAR *txt;
   UINT shv, shf, prg;
@@ -131,7 +131,7 @@ UINT VG4_ShadProgInit( CHAR *VSFileName, CHAR *FSFileName )
     return 0;
   }
   return prg;
-} /* End of 'VG4_ShadProgInit' function */
+} /* End of 'AP6_ShadProgInit' function */
 
 /* Функция удаления шейдерной программы.
  * АРГУМЕНТЫ:
@@ -139,7 +139,7 @@ UINT VG4_ShadProgInit( CHAR *VSFileName, CHAR *FSFileName )
  *       UINT ProgId;
  * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ: Нет.
  */
-VOID VG4_ShadProgClose( UINT ProgId )
+VOID AP6_ShadProgClose( UINT ProgId )
 {
   UINT i, n, shdrs[4];
 
@@ -155,6 +155,6 @@ VOID VG4_ShadProgClose( UINT ProgId )
     glDeleteShader(shdrs[i]);
   }
   glDeleteProgram(ProgId);
-} /* End of 'VG4_ShadProgClose' function */
+} /* End of 'AP6_ShadProgClose' function */
 
 /* END OF 'SHADER.C' FILE */

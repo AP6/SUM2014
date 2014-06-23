@@ -17,7 +17,6 @@
 
 #include "vec.h"
 
-
 #pragma comment(lib, "opengl32")
 #pragma comment(lib, "glu32")
 #pragma comment(lib, "glew32")

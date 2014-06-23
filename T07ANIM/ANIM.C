@@ -14,7 +14,7 @@
 #include "anim.h"
 
 /* Системный контекст анимации */
-static ap6ANIM AP6_Anim;
+ap6ANIM AP6_Anim;
 
 /* Данные для синхронизации по времени */
 static INT64
@@ -71,6 +71,8 @@ BOOL AP6_AnimInit( HWND hWnd )
 
   /* установка параметров OpenGL по-умолчанию */
   glEnable(GL_DEPTH_TEST);
+  /* Шейдерная программа */
+  AP6_ShaderProg = AP6_ShadProgInit("a.vert", "a.frag");
 
   /* инициализируем таймер */
   QueryPerformanceFrequency(&li);
@@ -87,7 +89,7 @@ BOOL AP6_AnimInit( HWND hWnd )
 
   AP6_Anim.MatrWorld = MatrIdenity();      /* матрица преобразования мировой СК */
   AP6_Anim.MatrView = MatrIdenity();       /* матрица преобразования видовой СК */
-  AP6_Anim.MatrProjection1 = MatrIdenity(); /* матрица проекции */
+  AP6_Anim.MatrProjection = MatrIdenity(); /* матрица проекции */
   return TRUE;
 } /* End of 'AP6_AnimInit' function */
 
@@ -105,6 +107,9 @@ VOID AP6_AnimClose( VOID )
     AP6_Anim.Units[i]->Close(AP6_Anim.Units[i], &AP6_Anim);
     free(AP6_Anim.Units[i]);
   }
+  AP6_ShadProgClose(AP6_ShaderProg);
+  wglMakeCurrent(NULL, NULL);
+  wglDeleteContext(AP6_Anim.hRC);
   ReleaseDC(AP6_Anim.hWnd, AP6_Anim.hDC);
   memset(&AP6_Anim, 0, sizeof(ap6ANIM));
 } /* End of 'AP6_AnimInit' function */
@@ -117,7 +122,7 @@ VOID AP6_AnimClose( VOID )
  */
 VOID AP6_AnimResize( INT W, INT H )
 {
-  DBL Size = 1, ratio_x = 1, ratio_y = 1;
+  FLT Size = 1, ratio_x = 1, ratio_y = 1;
   /* Сохранение размера */
   AP6_Anim.W = W;
   AP6_Anim.H = H;
@@ -125,9 +130,9 @@ VOID AP6_AnimResize( INT W, INT H )
   glViewport(0, 0, W, H);
 
   if (W > H)
-    ratio_x = (DBL)W / H;
+    ratio_x = (FLT)W / H;
   else
-    ratio_y = (DBL)H / W;
+    ratio_y = (FLT)H / W;
   AP6_Anim.Wp = Size * ratio_x;
   AP6_Anim.Hp = Size * ratio_y;
 } /* End of 'AP6_AnimResize' function */
@@ -135,7 +140,8 @@ VOID AP6_AnimResize( INT W, INT H )
 VOID AP6_AnimResponce( VOID )
 {
   INT i;
-    /* Джойстик */
+
+  /* Джойстик */
   if ((i = joyGetNumDevs()) > 0)
   {
     JOYCAPS jc;
@@ -185,7 +191,6 @@ VOID AP6_AnimResponce( VOID )
   }
 }
 
-
 /* Функция построения кадра анимации.
  * АРГУМЕНТЫ: Нет.
  * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ: Нет.
@@ -194,21 +199,24 @@ VOID AP6_AnimRender( VOID )
 {
   INT i;
   LARGE_INTEGER li;
+  MATR WVP;
 
   /* Обновление ввода */
   GetKeyboardState(AP6_Anim.Keys);
   for (i = 0; i < 256; i++)
     AP6_Anim.Keys[i] >>= 7;
 
+  AP6_AnimResponce();
+
   /* Обновление таймера */
-  AP6_Anim.Time = (DBL)clock() / CLOCKS_PER_SEC;
+  AP6_Anim.Time = (FLT)clock() / CLOCKS_PER_SEC;
 
   /* Обновление кадра */
   QueryPerformanceCounter(&li);
 
   /* глобальное время */
-  AP6_Anim.GlobalTime = (DBL)(li.QuadPart - TimeStart) / TimeFreq;
-  AP6_Anim.GlobalDeltaTime = (DBL)(li.QuadPart - TimeOld) / TimeFreq;
+  AP6_Anim.GlobalTime = (FLT)(li.QuadPart - TimeStart) / TimeFreq;
+  AP6_Anim.GlobalDeltaTime = (FLT)(li.QuadPart - TimeOld) / TimeFreq;
 
   /* локальное время */
   if (AP6_Anim.IsPause)
@@ -219,12 +227,12 @@ VOID AP6_AnimRender( VOID )
   else
     AP6_Anim.DeltaTime = AP6_Anim.GlobalDeltaTime;
 
-  AP6_Anim.Time = (DBL)(li.QuadPart - TimeStart - TimePause) / TimeFreq;
+  AP6_Anim.Time = (FLT)(li.QuadPart - TimeStart - TimePause) / TimeFreq;
 
   /* вычисляем FPS */
   if (li.QuadPart - TimeFPS > TimeFreq)
   {
-    AP6_Anim.FPS = FrameCounter / ((DBL)(li.QuadPart - TimeFPS) / TimeFreq);
+    AP6_Anim.FPS = FrameCounter / ((FLT)(li.QuadPart - TimeFPS) / TimeFreq);
     TimeFPS = li.QuadPart;
     FrameCounter = 0;
   }
@@ -239,6 +247,12 @@ VOID AP6_AnimRender( VOID )
 
   /* очистка фона */
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  /* Установка СК для отладки */
+  WVP = MatrMulMatr(AP6_Anim.MatrWorld,
+    MatrMulMatr(AP6_Anim.MatrView, AP6_Anim.MatrProjection));
+  glLoadMatrixf(WVP.A[0]);
+  glUseProgram(0);
 
   glBegin(GL_LINES);
     glColor3d(1, 0.5, 0.5);
@@ -256,8 +270,6 @@ VOID AP6_AnimRender( VOID )
   for (i = 0; i < AP6_Anim.NumOfUnits; i++)
     AP6_Anim.Units[i]->Render(AP6_Anim.Units[i], &AP6_Anim);
   FrameCounter++;
-
-  AP6_AnimResponce();
 } /* End of 'AP6_AnimRender' function */
 
 /* Функция вывода кадра анимации.

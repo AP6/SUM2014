@@ -16,9 +16,9 @@
 typedef struct tagap6UNIT_COW
 {
   AP6_UNIT_BASE_FIELDS; /* Включение базовых полей */
-  DBL ShiftX, ShiftY;
+  FLT ShiftX, ShiftY;
   INT Type;
-  ap6GOBJ Cow;
+  ap6GEOM Cow;
 } ap6UNIT_COW;
 
 /* Функция инициализации информационного объекта анимации.
@@ -31,7 +31,10 @@ typedef struct tagap6UNIT_COW
  */
 static VOID GObjUnitInit( ap6UNIT_COW *Unit, ap6ANIM *Ani )
 {
-  AP6_RndGObjLoad(&Unit->Cow, "cow.object");
+  //AP6_GeomLoad(&Unit->Cow, "e:\\Models\\Red Fox\\RED_FOX.OBJECT");
+  //AP6_GeomLoad(&Unit->Cow, "e:\\Models\\Raccoon\\RACCON.OBJECT");
+  AP6_GeomLoad(&Unit->Cow, "E:/Models/Elephant/elephant.obj");
+  AP6_GeomTransform(&Unit->Cow, MatrScale(0.0030, 0.0030, 0.0030));
 } /* End of 'GObjUnitInit' function */
 
 /* Функция деинициализации информационного объекта анимации.
@@ -44,7 +47,7 @@ static VOID GObjUnitInit( ap6UNIT_COW *Unit, ap6ANIM *Ani )
  */
 static VOID GObjUnitClose( ap6UNIT_COW *Unit, ap6ANIM *Ani )
 {
-  AP6_RndGObjFree(&Unit->Cow);
+  AP6_GeomFree(&Unit->Cow);
 } /* End of 'GObjUnitClose' function */
 
 /* Функция обновления межкадровых параметров информационного
@@ -58,12 +61,6 @@ static VOID GObjUnitClose( ap6UNIT_COW *Unit, ap6ANIM *Ani )
  */
 static VOID GObjUnitResponse( ap6UNIT_COW *Unit, ap6ANIM *Ani )
 {
-  if (Ani->Keys[VK_LMENU] && Ani->KeysClick[VK_RETURN])
-    AP6_AnimFlipFullScreen();
-  if (Ani->KeysClick['P'])
-    AP6_AnimSetPause(!Ani->IsPause);
-  if (Ani->Keys[VK_ESCAPE])
-    DestroyWindow(Ani->hWnd);
 } /* End of 'GObjUnitResponse' function */
 
 /* Функция построения информационного объекта анимации.
@@ -76,40 +73,49 @@ static VOID GObjUnitResponse( ap6UNIT_COW *Unit, ap6ANIM *Ani )
  */
 static VOID GObjUnitRender( ap6UNIT_COW *Unit, ap6ANIM *Ani )
 {
-  static DBL x, y, z;
+  INT i, j;
+  static FLT x, y, z, r;
+  static DBL time;
   MATR WVP;
 
-  x += Ani->JX;
-  y += Ani->JY;
-  z += Ani->JZ;
+  x += Ani->JX * Ani->DeltaTime * 3;
+  y += Ani->JY * Ani->DeltaTime * 3 * Ani->JButs[3];
+  z += Ani->JZ * Ani->DeltaTime * 3;
+  r += Ani->JR * Ani->DeltaTime * 30;
 
-  Ani->MatrWorld = MatrMulMatr(MatrTranslate(x, y, 2 * z), MatrRotateY(y));;
-  Ani->MatrView = MatrViewLookAt(VecSet(15, 15, 15), VecSet(0, 0, 0), VecSet(0, 1, 0));
-  Ani->MatrProjection1 = MatrProjection(-Ani->Wp / 2, Ani->Wp / 2,
-                                        -Ani->Hp / 2, Ani->Hp / 2,
-                                        Ani->ProjDist, 1000);    
+  Ani->MatrWorld = MatrMulMatr(MatrTranslate(x, y, 2 * z), MatrRotateY(r));
+  Ani->MatrView = MatrViewLookAt(VecSet(5, 5, 5), VecSet(0, 0, 0), VecSet(0, 1, 0));
+  Ani->MatrProjection = MatrProjection(-Ani->Wp / 2, Ani->Wp / 2,
+                                       -Ani->Hp / 2, Ani->Hp / 2,
+                                       Ani->ProjDist, 1000);    
 
-  
-  WVP = MatrMulMatr(Ani->MatrWorld,
-    MatrMulMatr(Ani->MatrView, Ani->MatrProjection1));
+  if ((time += Ani->DeltaTime) > 1)
+  {
+    time = 0;
+    AP6_ShaderProg = AP6_ShadProgInit("a.vert", "a.frag");
+  }
 
-  
-  glLoadMatrixd(WVP.A[0]);
-/*  
- glBegin(GL_LINES);
-    glColor3d(1, 0.5, 0.5);
-    glVertex3d(-3, 0, 0);
-    glVertex4d(1, 0, 0, 0);
-    glColor3d(0.5, 1, 0.5);
-    glVertex3d(0, -3, 0);
-    glVertex4d(0, 1, 0, 0);
-    glColor3d(0.5, 0.5, 1);
-    glVertex3d(0, 0, -3);
-    glVertex4d(0, 0, 1, 0);
-  glEnd();
-*/  
+  for (i = -5; i <= 5; i++)
+    for (j = -5; j <= 5; j++)
+    {
+      INT loc;
 
-  AP6_RndGObjDraw(&Unit->Cow, Ani->hDC);
+      glUseProgram(AP6_ShaderProg);
+      loc = glGetUniformLocation(AP6_ShaderProg, "indI");
+      if (loc != -1)
+        glUniform1f(loc, i);
+      loc = glGetUniformLocation(AP6_ShaderProg, "indJ");
+      if (loc != -1)
+        glUniform1f(loc, j);
+
+      Ani->MatrWorld = MatrMulMatr(MatrTranslate(i * 2 + x, y, j * 3 + 2 * z), MatrRotateY(r));;
+      /* отладочный вывод */
+      WVP = MatrMulMatr(Ani->MatrWorld,
+        MatrMulMatr(Ani->MatrView, Ani->MatrProjection));
+      glLoadMatrixf(WVP.A[0]);
+
+      AP6_GeomDraw(&Unit->Cow);
+    }
 } /* End of 'GObjUnitRender' function */
 
 /* Функция создания информационного объекта анимации.

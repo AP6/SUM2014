@@ -8,6 +8,7 @@
 #define __ANIM_H_
 
 #include "image.h"
+#include "render.h"
 
 /* Максимальное количество элементов анимации */
 #define AP6_MAX_UNITS 3000
@@ -28,7 +29,7 @@ typedef struct tagap6ANIM
   INT NumOfUnits;
 
   /* Подсистема синхронизации */
-  DBL
+  FLT
     Time,            /* время в секундах со старта анимации */
     GlobalTime,      /* время -"-, но без паузы */
     DeltaTime,       /* межкадровое время в секундах */
@@ -38,7 +39,7 @@ typedef struct tagap6ANIM
 
 
     /* Параметры проецирования */
-  DBL
+  FLT
     Wp, Hp,    /* размеры обрасти проецирования */
     ProjDist,   /* расстояние до плоскости проекции */
     ProjClip,
@@ -48,7 +49,7 @@ typedef struct tagap6ANIM
   MATR
     MatrWorld,        /* матрица преобразования мировой СК */
     MatrView,         /* матрица преобразования видовой СК */
-    MatrProjection1;   /* матрица проекции */
+    MatrProjection;   /* матрица проекции */
 
   DWORD JPOV;
 
@@ -64,6 +65,8 @@ typedef struct tagap6ANIM
   BYTE Keys[256],
     KeysClick[256];     /* Сотояние клавиш клавиатуры и мыши */
 } ap6ANIM;
+
+extern ap6ANIM AP6_Anim;
 
 /* Базовые поля объекта анимации:
  * - размер структуры для наследования

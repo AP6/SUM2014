@@ -1,10 +1,10 @@
-/* AP6, 06.06.2014 */
+/* AP6, 23.06.2014 */
 
 
 #ifndef __VEC_H_
 #define __VEC_H_
 
-#include "def.h"
+#pragma warning(disable: 4244 4305)
 
 #include <math.h>
 
@@ -17,22 +17,28 @@ typedef double DBL;
 /* тип для вектора в простанстве */
 typedef struct tagVEC
 {
-  DBL X, Y, Z;
+  FLT X, Y, Z;
 } VEC;
+
+/* тип для цвета */
+typedef struct tagCOLOR
+{
+  FLT R, G, B, A;
+} COLOR;
 
 /* тип для матрицы - массив в структуре */
 typedef struct tagMATR
 {
-  DBL A[4][4];
+  FLT A[4][4];
 } MATR;
 
-#define PI 3.14159265358979323846
-#define D2R(A) ((A) * (PI / 180.0))
-#define VG4_R2D(A) ((A) * (180.0 / VG4_PI))
+#define AP6_PI 3.14159265358979323846
+#define D2R(A) ((A) * (AP6_PI / 180.0))
+#define AP6_R2D(A) ((A) * (180.0 / AP6_PI))
 
 /* Множитель для преобразования градусов в радианы */
-#define VG4_DEGREE2RADIANL 0.01745329251994329576L
-extern long double VG4_MultiplierDegree2Radian;
+#define AP6_DEGREE2RADIANL 0.01745329251994329576L
+extern long double AP6_MultiplierDegree2Radian;
 
 
 /* единичная матрица */
@@ -47,15 +53,15 @@ extern long double VG4_MultiplierDegree2Radian;
 }
 
 /* */
-__inline DBL VecDotVec( VEC V1, VEC V2 )
+__inline FLT VecDotVec( VEC V1, VEC V2 )
 {
   return V1.X * V2.X + V1.Y * V2.Y + V1.Z * V2.Z;
 } /* */
 
 /* */
-__inline DBL VecLen( VEC V )
+__inline FLT VecLen( VEC V )
 {
-  DBL len = VecDotVec(V, V);
+  FLT len = VecDotVec(V, V);
 
   if (len != 0 && len != 1)
     return sqrt(len);
@@ -63,9 +69,9 @@ __inline DBL VecLen( VEC V )
 } /* */
 
 /* */
-__inline DBL VecLen2( VEC V )
+__inline FLT VecLen2( VEC V )
 {
-  DBL len = VecDotVec(V, V);
+  FLT len = VecDotVec(V, V);
 
   if (len != 0 && len != 1)
     return len;
@@ -73,7 +79,22 @@ __inline DBL VecLen2( VEC V )
 } /* */
 
 /* */
-__inline VEC VecSet( DBL X, DBL Y, DBL Z )
+__inline COLOR ColorSet( FLT X, FLT Y, FLT Z )
+{
+  COLOR c = {X, Y, Z, 1};
+
+  return c;
+} /* */
+
+__inline COLOR ColorSet3( FLT X, FLT Y, FLT Z, FLT A )
+{
+  COLOR c = {X, Y, Z, A};
+
+  return c;
+} /* */
+
+/* */
+__inline VEC VecSet( FLT X, FLT Y, FLT Z )
 {
   VEC v;
 
@@ -114,7 +135,7 @@ __inline VEC VecSubVec( VEC V1, VEC V2 )
 } /* */
 
 /* */
-__inline VEC VecMulNum( VEC V, DBL N )
+__inline VEC VecMulNum( VEC V, FLT N )
 {
   V.X = V.X * N;
   V.Y = V.Y * N;
@@ -122,7 +143,7 @@ __inline VEC VecMulNum( VEC V, DBL N )
 } /* */
 
 /* */
-__inline VEC VecDivNum( VEC V, DBL N )
+__inline VEC VecDivNum( VEC V, FLT N )
 {
   V.X = V.X / N;
   V.Y = V.Y / N;
@@ -132,7 +153,7 @@ __inline VEC VecDivNum( VEC V, DBL N )
 /* */
 __inline VEC VecNormalize( VEC V )
 {
-  DBL len = VecDotVec(V, V);
+  FLT len = VecDotVec(V, V);
   if (len != 0 && len != 1)
     len = sqrt(len);
   V.X /= len, V.Y /= len, V.Z /= len;
@@ -140,7 +161,7 @@ __inline VEC VecNormalize( VEC V )
 } /* */
 
 /* */
-__inline MATR MatrTranslate( DBL Dx, DBL Dy, DBL Dz )
+__inline MATR MatrTranslate( FLT Dx, FLT Dy, FLT Dz )
 {
   MATR A =
   {
@@ -158,7 +179,7 @@ __inline MATR MatrTranslate( DBL Dx, DBL Dy, DBL Dz )
 /* умножение вектора на матрицу (с учетом однородной координаты) */
 __inline VEC VecMulMatr( VEC V, MATR M )
 {
-  DBL w = V.X * M.A[0][3] + V.Y * M.A[1][3] + V.Z * M.A[2][3] + M.A[3][3];
+  FLT w = V.X * M.A[0][3] + V.Y * M.A[1][3] + V.Z * M.A[2][3] + M.A[3][3];
 
   return VecSet((V.X * M.A[0][0] + V.Y * M.A[1][0] + V.Z * M.A[2][0] + M.A[3][0]) / w,
                 (V.X * M.A[0][1] + V.Y * M.A[1][1] + V.Z * M.A[2][1] + M.A[3][1]) / w,
@@ -175,7 +196,7 @@ __inline MATR MatrIdenity( VOID )
 
 
 /* */
-__inline MATR MatrScale( DBL Sx, DBL Sy, DBL Sz )
+__inline MATR MatrScale( FLT Sx, FLT Sy, FLT Sz )
 {
   MATR m = AP6_UNIT_MATR;;
 
@@ -186,9 +207,9 @@ __inline MATR MatrScale( DBL Sx, DBL Sy, DBL Sz )
 } /* */
 
 /* */
-__inline MATR MatrRotateX( DBL AngleInDegree )
+__inline MATR MatrRotateX( FLT AngleInDegree )
 {
-    DBL a, si, co;
+    FLT a, si, co;
   MATR m;
 
   a = D2R(AngleInDegree);
@@ -214,9 +235,9 @@ __inline MATR MatrRotateX( DBL AngleInDegree )
 } /* */
 
 /* */
-__inline MATR MatrRotateY( DBL AngleInDegree )
+__inline MATR MatrRotateY( FLT AngleInDegree )
 {
-    DBL a, si, co;
+    FLT a, si, co;
   MATR m;
 
   a = D2R(AngleInDegree);
@@ -242,9 +263,9 @@ __inline MATR MatrRotateY( DBL AngleInDegree )
 } /* */
 
 /* */
-__inline MATR MatrRotateZ( DBL AngleInDegree )
+__inline MATR MatrRotateZ( FLT AngleInDegree )
 {
-  DBL a, si, co;
+  FLT a, si, co;
   MATR m;
 
   a = D2R(AngleInDegree);
@@ -270,10 +291,10 @@ __inline MATR MatrRotateZ( DBL AngleInDegree )
 } /* */
 
 /* */
-__inline MATR MatrRotate( DBL AngleInDegree,
-                 DBL X, DBL Y, DBL Z )
+__inline MATR MatrRotate( FLT AngleInDegree,
+                 FLT X, FLT Y, FLT Z )
 {
-  DBL a, si, co, len;
+  FLT a, si, co, len;
   MATR m;
 
   a = D2R(AngleInDegree);
@@ -338,19 +359,20 @@ __inline MATR MatrTranspose( MATR M )
   m.A[3][1] = M.A[1][3];
   m.A[3][2] = M.A[2][3];
   m.A[3][3] = M.A[3][3];
+  return m;
 } /* */
 
 /* */
-__inline DBL MatrDeterm3x3( DBL A11, DBL A12, DBL A13,
-                   DBL A21, DBL A22, DBL A23,
-                   DBL A31, DBL A32, DBL A33 )
+__inline FLT MatrDeterm3x3( FLT A11, FLT A12, FLT A13,
+                   FLT A21, FLT A22, FLT A23,
+                   FLT A31, FLT A32, FLT A33 )
 {
   return A11 * A22 * A33 + A12 * A23 * A31 + A13 * A21 * A32 +
         -A11 * A23 * A32 - A12 * A21 * A33 - A13 * A22 * A31;
 } /* */
 
 /* */
-__inline DBL MatrDeterm( MATR M )
+__inline FLT MatrDeterm( MATR M )
 {
   return
     M.A[0][0] * MatrDeterm3x3(M.A[1][1], M.A[1][2], M.A[1][3],
@@ -373,7 +395,7 @@ __inline MATR MatrInverse( MATR M )
   int i, j;
   MATR r;
 
-  DBL det = MatrDeterm(M);
+  FLT det = MatrDeterm(M);
   int perm[4][3] =
   {
     {1, 2, 3},
@@ -420,9 +442,9 @@ __inline VEC VectorTransform( VEC V, MATR M )
     V.X * M.A[0][2] + V.Y * M.A[1][2]  + V.Z * M.A[2][2]);
 }
 
-__inline MATR MatrProjection( DBL Left, DBL Right,
-                              DBL Bottom, DBL Top,
-                              DBL Near, DBL Far )
+__inline MATR MatrProjection( FLT Left, FLT Right,
+                              FLT Bottom, FLT Top,
+                              FLT Near, FLT Far )
 {
   MATR m =
   {

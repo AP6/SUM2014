@@ -79,8 +79,9 @@ static VOID InfoUnitRender( ap6UNIT_INFO *Unit, ap6ANIM *Ani )
   SetWindowText(Ani->hWnd, Buf);
 
   glPushAttrib(GL_ALL_ATTRIB_BITS);
+  glUseProgram(0);
   glPushMatrix();
-  glLoadMatrixd(mi.A[0]);
+  glLoadMatrixf(mi.A[0]);
   glDisable(GL_DEPTH_TEST);
   glDisable(GL_TEXTURE_2D);
   glRasterPos2d(-1, 0.95);
