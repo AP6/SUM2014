@@ -87,7 +87,7 @@ static VOID InstUnitRender( ap6UNIT_INST *Unit, ap6ANIM *Ani )
   z += Ani->JZ * Ani->DeltaTime * 3;
   r += Ani->JR * Ani->DeltaTime * 30;
 
-  Ani->MatrWorld = MatrMulMatr(MatrTranslate(x , y + 2, 2 * z), MatrRotateY(r ));
+  Ani->MatrWorld = MatrMulMatr(MatrTranslate(x , y + 2, 2 * z + 2), MatrRotateY(r ));
 
   if (Ani->Keys['W'])
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

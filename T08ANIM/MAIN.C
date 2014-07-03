@@ -109,10 +109,8 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   UpdateWindow(hWnd);
 
   /*** Добавление объектов ***/
-//  AP6_AnimAddUnit(AP6_GObjUnitCreate());
-//    AP6_AnimAddUnit(AP6_InstUnitCreate());
-//  AP6_AnimAddUnit(AP6_GObjUnitCreate());
   AP6_AnimAddUnit(AP6_InfoUnitCreate());
+  AP6_AnimAddUnit(AP6_GObjUnitCreate());
   AP6_AnimAddUnit(AP6_InstUnitCreate());
 
 

@@ -21,6 +21,7 @@ typedef struct tagap6UNIT_COW
   ap6GEOM Info;
   ap6GEOM Land;
   ap6GEOM Water;
+  ap6GEOM InchWorm;
 } ap6UNIT_COW;
 
 /* Функция инициализации объекта анимации.
@@ -38,17 +39,15 @@ static VOID InfoUnitInit( ap6UNIT_COW *Unit, ap6ANIM *Ani )
 
   AP6_GeomLoad(&Unit->Info, "E:/Models/Rattlesnake/RATTLER.OBJ");  
   strcpy(Unit->Info.ProgName, "snake");
-  /*
-  AP6_GeomLoad(&Unit->Info, "Q:/Models/cow.object");
-  AP6_PrimCreateSphere(&p, VecSet(0, 0, 0), 3, 30, 30);
-  AP6_GeomAddPrim(&Unit->Info, &p);
-  */
+
+//  AP6_GeomLoad(&Unit->InchWorm, "E:/Models/Inchworm/INCHWORM.OBJ");
+//  strcpy(Unit->InchWorm.ProgName, "snake");
 
   /* Загрузка ландшафта */
   memset(&Unit->Land, 0, sizeof(ap6GEOM));
   strcpy(Unit->Land.ProgName, "land");
 //  AP6_PrimCreateHeightField(&p, "hf.bmp", 3.0, 10);
-  AP6_PrimCreateHeightField(&p, "hf.bmp", 2.0, 60);
+  AP6_PrimCreateHeightField(&p, "hf.bmp", 2.0, 55);
 
 
   mtl.Ka = VecSet(0.1, 0.1, 0.1);
@@ -150,7 +149,7 @@ static VOID InfoUnitRender( ap6UNIT_COW *Unit, ap6ANIM *Ani )
       if (loc != -1)
         glUniform1f(loc, j);
 
-      Ani->MatrWorld = MatrMulMatr(MatrTranslate(i * 2 +  x, 0, j * 3 +  z), MatrMulMatr(MatrRotateY (y), MatrRotateX(u)));;
+      Ani->MatrWorld = MatrMulMatr(MatrTranslate(i * 2 +  x, 0, j * 3 +  z), MatrMulMatr(MatrRotateY(y), MatrRotateX(u)));;
       AP6_GeomDraw(&Unit->Info);
     }
   AP6_GeomDraw(&Unit->Land);
