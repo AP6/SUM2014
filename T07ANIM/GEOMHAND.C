@@ -13,15 +13,15 @@
  *   - геометрический объект:
  *       ap6GEOM *G;
  *   - добавляемый материал:
- *       vg4MATERIAL *Mtl;
+ *       ap6MATERIAL *Mtl;
  * ВОЗВРАЩАЕМОЕ ЗНАЧЕНИЕ:
  *   (INT) номер добавленного материала или -1
  *         при ошибке.
  */
-INT AP6_GeomAddMaterial( ap6GEOM *G, vg4MATERIAL *Mtl )
+INT AP6_GeomAddMaterial( ap6GEOM *G, ap6MATERIAL *Mtl )
 {
   INT i;
-  vg4MATERIAL *M;
+  ap6MATERIAL *M;
 
   /* ищем материал в библиотеке */
   for (i = 0; i < G->NumOfMtls; i++)
@@ -31,12 +31,12 @@ INT AP6_GeomAddMaterial( ap6GEOM *G, vg4MATERIAL *Mtl )
       return i;
     }
 
-  if ((M = malloc(sizeof(vg4MATERIAL) * (G->NumOfMtls + 1))) == NULL)
+  if ((M = malloc(sizeof(ap6MATERIAL) * (G->NumOfMtls + 1))) == NULL)
     return -1;
   if (G->Mtls != NULL)
   {
     /* копируем старые данные */
-    memcpy(M, G->Mtls, sizeof(vg4MATERIAL) * G->NumOfMtls);
+    memcpy(M, G->Mtls, sizeof(ap6MATERIAL) * G->NumOfMtls);
     /* освобождаем память */
     free(G->Mtls);
   }

@@ -110,19 +110,19 @@ typedef struct tagvg4MATERIAL
     Name[MAX_STR], /* имя материала */
     MapD[MAX_STR]; /* имя текстуры */
   INT TexNo;       /* идентификатор текстуры в OpenGL */
-} vg4MATERIAL;
+} ap6MATERIAL;
 
 /* Геометрический объект - набор примитивов */
 typedef struct tagvg4GEOM
 {
   INT NumOfPrims, NumOfMtls; /* размерв массивов */
-  vg4MATERIAL *Mtls;         /* таблица материалов */
+  ap6MATERIAL *Mtls;         /* таблица материалов */
   ap6PRIM *Prims;            /* массив примитивов */
 } ap6GEOM;
 
 /* Функция добавления материала к объекту */
 INT AP6_GeomAddMaterial( ap6GEOM *G,
-                         vg4MATERIAL *Mtl );
+                         ap6MATERIAL *Mtl );
 
 /* Функция добавления примитива к объекту */
 INT AP6_GeomAddPrim( ap6GEOM *G, ap6PRIM *Prim );

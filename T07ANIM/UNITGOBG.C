@@ -61,6 +61,14 @@ static VOID GObjUnitClose( ap6UNIT_COW *Unit, ap6ANIM *Ani )
  */
 static VOID GObjUnitResponse( ap6UNIT_COW *Unit, ap6ANIM *Ani )
 {
+  /*
+  if (Ani->Keys[VK_LMENU] && Ani->KeysClick[VK_RETURN])
+    AP6_AnimFlipFullScreen();
+  if (Ani->KeysClick['P'])
+    AP6_AnimSetPause(!Ani->IsPause);
+  if (Ani->Keys[VK_ESCAPE])
+    DestroyWindow(Ani->hWnd);
+  */
 } /* End of 'GObjUnitResponse' function */
 
 /* Функция построения информационного объекта анимации.

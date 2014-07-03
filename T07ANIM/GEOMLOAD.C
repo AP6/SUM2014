@@ -132,7 +132,7 @@ static CHAR
 static VOID LoadMaterials( ap6GEOM *G, CHAR *FileName )
 {
   FILE *F;
-  vg4MATERIAL DefMat, Mat;
+  ap6MATERIAL DefMat, Mat;
   static CHAR FName[_MAX_PATH];
 
   DefMat.Ka = VecSet(0.1, 0.1, 0.1);

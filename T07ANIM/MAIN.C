@@ -179,7 +179,7 @@ LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg,
     switch ((CHAR)wParam)
     {
     case 27:
-      DestroyWindow(hWnd);
+      exit(0);
       return 0;
     case 'f':
       AP6_AnimFlipFullScreen();
@@ -200,6 +200,7 @@ LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg,
     AP6_AnimClose();
     PostQuitMessage(0);
     KillTimer(hWnd, 30);
+    exit(0);
     return 0;
   }
   return DefWindowProc(hWnd, Msg, wParam, lParam);

@@ -61,7 +61,7 @@ BOOL AP6_AnimInit( HWND hWnd )
   /* инициализируем расширения */
   if (glewInit() != GLEW_OK ||
       !(GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader))
-  {
+  {                                              
     wglMakeCurrent(NULL, NULL);
     wglDeleteContext(AP6_Anim.hRC);
     ReleaseDC(AP6_Anim.hWnd, AP6_Anim.hDC);

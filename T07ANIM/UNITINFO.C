@@ -58,7 +58,7 @@ static VOID InfoUnitResponse( ap6UNIT_INFO *Unit, ap6ANIM *Ani )
   if (Ani->KeysClick['P'])
     AP6_AnimSetPause(!Ani->IsPause);
   if (Ani->Keys[VK_ESCAPE])
-    DestroyWindow(Ani->hWnd);
+    DestroyWindow(Ani->hWnd);         
 } /* End of 'InfoUnitResponse' function */
 
 /* Функция построения информационного объекта анимации.
