@@ -99,7 +99,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   hWnd = CreateWindow(WND_CLASS_NAME, "First Window Sample",
     WS_OVERLAPPEDWINDOW,
     1920, 0, //CW_USEDEFAULT, CW_USEDEFAULT, /* Позиция окна (x, y) - по умолчанию */
-    1280, 1000, //CW_USEDEFAULT, CW_USEDEFAULT, /* Размеры окна (w, h) - по умолчанию */
+    CW_USEDEFAULT, CW_USEDEFAULT, /* Размеры окна (w, h) - по умолчанию */
     NULL,                         /* Дескриптор родительского окна */
     NULL,                         /* Дескриптор загруженного меню */
     hInstance,                    /* Дескриптор приложения */
